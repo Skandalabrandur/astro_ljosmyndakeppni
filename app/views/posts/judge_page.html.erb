@@ -1,5 +1,6 @@
 <p id="notice"><%= notice %></p>
 <h1>Sæll, dómari</h1>
+<p><%= link_to "Skrá út", logoutings_path %></p>
 
 <% @ratings = Rating.where(user_id: @user.id) %>
 <% if @ratings.nil? %>
