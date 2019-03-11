@@ -1,4 +1,6 @@
 <p id="notice"><%= notice %></p>
+<% if @user.nil? %>
+  <% @user = [] %>
 
 <% if @user.judge %>
   <% @picture_owner = User.find(@post.user_id) %>

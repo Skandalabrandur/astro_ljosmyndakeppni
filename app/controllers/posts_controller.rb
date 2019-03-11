@@ -11,10 +11,7 @@ class PostsController < ApplicationController
 
     # GET /posts/1
     def show
-        @user = current_user
-        unless (current_user && @post.user_id == current_user.id) || (current_user.judge || current_user.admin)
-            redirect_to error_path, notice: 'Þarft að vera dómari til að sjá allar myndir'
-        end
+
     end
 
     def rate
@@ -46,23 +43,21 @@ class PostsController < ApplicationController
 
     # GET /posts/new
     def new
-        if current_user
-            @post = Post.new
-        else
-            render :not_logged_in
-        end
+        @post = Post.new
+
     end
 
     def user_start_page
-        if current_user 
-            @posts = current_user.posts unless current_user.judge
-            @user  = current_user
-            if @user.admin
+        unless current_user.nil?
+            @user = current_user
+            render :judge_page
+
+            if current_user.admin
                 render :admin_page
             end
-        else
-            render :not_logged_in
         end
+
+        redirect_to "/posts/new"
     end
 
     # GET /posts/1/edit
@@ -76,17 +71,15 @@ class PostsController < ApplicationController
 
     # POST /posts
     def create
-        unless current_user
-            redirect_to error_path, notice: 'Þarft að vera innskráður notandi til að senda inn mynd'
-        end
-        @post = Post.new(post_params)
-        @post.user_id = current_user.id
+        #unless current_user
+        #    redirect_to error_path, notice: 'Þarft að vera innskráður notandi til að senda inn mynd'
+        #end
 
-        #if @post.save
-        posting = current_user.posts.create(post_params)
-        #if current_user.posts.create(post_params)
-        if posting
-            redirect_to "/posts/#{posting.id}", notice: 'Aðgerð tókst.'
+
+        @post = Post.new(post_params)
+
+        if @post.save
+            redirect_to @post, notice: 'Aðgerð tókst.'
         else
             render :new
         end
