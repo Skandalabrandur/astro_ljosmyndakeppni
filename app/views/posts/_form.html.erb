@@ -1,0 +1,33 @@
+<%= form_with(model: post, local: true) do |form| %>
+  <% if post.errors.any? %>
+    <div id="error_explanation">
+      <!--<h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>-->
+      <h2>Eitthvað kom í veg fyrir að myndin var vistuð</h2>
+
+      <ul>
+      <% post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label "Titill" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Texti við mynd" %>
+    <%= form.text_area :content %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Hlaða upp mynd" %>
+    <%= form.file_field :image, :onchange => 'previewImage(this)' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,99 @@
+<p id="notice"><%= notice %></p>
+
+<% unless @user.judge %>
+  <h1>Ljósmyndakeppni</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Myndir</th>
+        <th colspan="1"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @posts.count == 0 %>
+        <tr>
+          <td>Þú hefur ekki hlaðið upp neinum myndum </td>
+          <td>Smelltu á 'Ný mynd' hér fyrir neðan</td>
+        </tr>
+      <% end %>
+      <% @posts.each do |post| %>
+        <tr>
+          <td><%= post.title %></td>
+          <td><%= link_to "Skoða", post_path(post.id) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <br>
+
+  <%= link_to 'Ný mynd', new_post_path %>
+
+<% else %>
+  <h1>Sæll, dómari</h1>
+
+  <% @ratings = Rating.where(user_id: @user.id) %>
+  <% if @ratings.nil? %>
+    <% @ratings = [] %>
+  <% end %>
+  <% @rated_posts_ids = [] %>
+  <% @ratings.each do |rating| %>
+    <% @rated_posts_ids.push(rating.post_id) %>
+  <% end %>
+
+  <% @posts = Post.all %>
+  <% if @posts.nil? || @posts.count == 0 %>
+    <% @posts = [] %>
+  <% end %>
+
+  <% @rated_posts   = @posts.select { |post| @rated_posts_ids.include?(post.id) }%>
+  <% @unrated_posts = @posts.select { |post| !@rated_posts_ids.include?(post.id) }%>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th>Myndir sem þú átt eftir að gefa einkunn</th>
+        <th colspan="1"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @unrated_posts.count == 0 %>
+        <tr>
+          <td>Engar myndir í kerfinu</td>
+          <td>Jöss, þú þarft ekkert að gera</td>
+        </tr>
+      <% end %>
+      <% @unrated_posts.each do |post| %>
+        <tr>
+          <td><%= post.title %></td>
+          <td><%= link_to "Skoða", post_path(post.id) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @rated_posts.count > 0 %>
+    <table>
+      <thead>
+        <tr>
+          <th>Myndir sem þú hefur gefið einkunn</th>
+          <th colspan="1"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @rated_posts.each do |post| %>
+          <tr>
+            <td><%= post.title %></td>
+            <td><%= link_to "Skoða", post_path(post.id) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
