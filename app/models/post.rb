@@ -3,6 +3,7 @@ class Post < ApplicationRecord
 
     validate :image_presence
     validates :title, presence: true
+    validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
     private
 
@@ -12,3 +13,4 @@ class Post < ApplicationRecord
         end
     end
 end
+

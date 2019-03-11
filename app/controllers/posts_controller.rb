@@ -11,7 +11,21 @@ class PostsController < ApplicationController
 
     # GET /posts/1
     def show
+        unless current_user
+            redirect_to error_path, notice: "Aðeins dómarar hafa aðgang að þessu vefsvæði"
+        else
+            @user = current_user
+        end
+    end
 
+    def user_show
+        @post = Post.find(params[:id])
+        puts "FOO"
+        puts "INSPECT: #{params.inspect}"
+        puts "post.email = #{@post.email}"
+        if @post.email != params[:email]
+            redirect_to error_path, notice: "Þú hefur ekki réttindin til að skoða þessa mynd. Email vantar til sönnunar"
+        end
     end
 
     def rate
@@ -50,14 +64,15 @@ class PostsController < ApplicationController
     def user_start_page
         unless current_user.nil?
             @user = current_user
-            render :judge_page
 
             if current_user.admin
                 render :admin_page
+            else
+                render :judge_page
             end
+        else
+            redirect_to "/posts/new"
         end
-
-        redirect_to "/posts/new"
     end
 
     # GET /posts/1/edit
@@ -79,7 +94,7 @@ class PostsController < ApplicationController
         @post = Post.new(post_params)
 
         if @post.save
-            redirect_to @post, notice: 'Aðgerð tókst.'
+            redirect_to "/image/#{@post.id}/#{@post.email}", notice: 'Mynd móttekin.'
         else
             render :new
         end
@@ -112,6 +127,6 @@ class PostsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def post_params
-        params.require(:post).permit(:title, :content, :image)
+        params.require(:post).permit(:title, :content, :image, :email)
     end
 end

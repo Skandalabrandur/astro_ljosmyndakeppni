@@ -10,7 +10,7 @@
 #Superuser
 User.create(
     email: 'admin', 
-    password_digest: BCrypt::Password.create("LEdC9beyJQ2C6PBZ"),
+    password_digest: BCrypt::Password.create("gottigottiborðarost"),
     judge: true,
     admin: true,
 )
