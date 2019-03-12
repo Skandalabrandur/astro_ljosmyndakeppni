@@ -8,37 +8,45 @@
 
 
 #Superuser
-User.create(
-    email: 'admin', 
-    password_digest: BCrypt::Password.create("gottigottiborðarost"),
-    judge: true,
-    admin: true,
-)
+#User.create(
+#    email: 'admin', 
+#    password_digest: BCrypt::Password.create("gottigottiborðarost"),
+#    judge: true,
+#    admin: true,
+#)
+
+#User.create(
+#    email: 'judge',
+#    password_digest: BCrypt::Password.create("mike"),
+#    judge: true,
+#    admin: false
+#)
 
 User.create(
-    email: 'judge',
-    password_digest: BCrypt::Password.create("mike"),
-    judge: true,
-    admin: false
+	email: 'judge',
+	password_digest: BCrypt::Password.create("hundur forseti"),
+	judge: true,
+	admin: false,
 )
 
-User.create(
-    email: 'judge2',
-    password_digest: BCrypt::Password.create("dredd"),
-    judge: true,
-    admin: false
-)
-
-User.create(
-    email: 'judge3',
-    password_digest: BCrypt::Password.create("fudge"),
-    judge: true,
-    admin: false
-)
-
-User.create(
-    email: 'steini',
-    password_digest: BCrypt::Password.create("1234"),
-    judge: false,
-    admin: false
-)
+#
+#User.create(
+#    email: 'judge2',
+#    password_digest: BCrypt::Password.create("dredd"),
+#    judge: true,
+#    admin: false
+#)
+#
+#User.create(
+#    email: 'judge3',
+#    password_digest: BCrypt::Password.create("fudge"),
+#    judge: true,
+#    admin: false
+#)
+#
+#User.create(
+#    email: 'steini',
+#    password_digest: BCrypt::Password.create("1234"),
+#    judge: false,
+#    admin: false
+#)

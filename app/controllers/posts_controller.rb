@@ -20,9 +20,6 @@ class PostsController < ApplicationController
 
     def user_show
         @post = Post.find(params[:id])
-        puts "FOO"
-        puts "INSPECT: #{params.inspect}"
-        puts "post.email = #{@post.email}"
         if @post.email != params[:email]
             redirect_to error_path, notice: "Þú hefur ekki réttindin til að skoða þessa mynd. Email vantar til sönnunar"
         end
@@ -112,7 +109,7 @@ class PostsController < ApplicationController
 
     # DELETE /posts/1
     def destroy
-        unless current_user && (current_user.id == @post.user_id || current.user.admin)
+        unless current_user && current_user.judge
             redirect_to error_path, notice: "Ólögleg aðgerð. Þarft að vera stjórnandi eða eigandi myndar til að eyða henni"
         end
         @post.destroy
