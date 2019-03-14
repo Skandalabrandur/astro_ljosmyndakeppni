@@ -1,8 +1,45 @@
+<div>
+<%= link_to 'Til baka', root_path %>
+<% if @user.judge || @user.admin %>
+    <%= link_to 'EYÐA MYND!', @post, method: :delete, data: { confirm: 'Ertu viss um að þú viljir eyða mynd?' } %>
+<% end %>
+
 <p id="notice"><%= notice %></p>
 <% if @user.nil? %>
     <% @userstruct = Struct.new(:judge) %>
     <% @user = @userstruct.new %>
     <% @user.judge = false %>
+<% end %>
+
+<% if @user.admin %>
+    <% if Rating.find_by(post_id: @post.id) %>
+	<% @ratings = Rating.where(post_id: @post.id) %>
+    <% else %>
+	<% @ratings = [] %>
+    <% end %>
+
+   <% @judges = User.all.select{|u| u.judge } %>
+   <% @raters = @ratings.collect{|r| r.user_id} %>
+
+   <h2>Dómarar sem hafa gefið myndinni einkunn</h2>
+	<ul>
+	    <% @judges.each do |judge| %>
+		<% if @raters.include?(judge.id) %>
+		    <li><%=judge.email%>, einkunn: <%= Rating.find_by(post_id: @post.id, user_id: judge.id).value %></li>
+		<% end %>
+	    <% end %>
+	</ul>
+
+   <h2>Dómarar sem eiga eftir að gefa einkunn</h2>
+	<ul>
+	    <% @judges.each do |judge| %>
+		<% unless @raters.include?(judge.id) %>
+		    <li><%=judge.email%></li>
+		<% end %>
+	    <% end %>
+	</ul>
+
+
 <% end %>
 
 <% if @user.judge %>
@@ -15,7 +52,7 @@
         <h1>Gefa einkunn</h1>
     <% end %>
 
-    <% 5.times.with_index do |i| %>
+    <% 10.times.with_index do |i| %>
         <h2 style="display: inline-block"><%= link_to (i+1), "/rate/#{@post.id}/#{i+1}" %></h2>
     <% end %>
 
@@ -46,10 +83,6 @@
     <%= image_tag @post.image, :class => "fullstort" %>
     </p>
 <% end %>
-
-<%= link_to 'Til baka', root_path %>
-<% if @user.judge %>
-    <%= link_to 'EYÐA MYND!', @post, method: :delete, data: { confirm: 'Ertu viss um að þú viljir eyða mynd?' } %>
-<% end %>
+</div>
 
 <script>registerImages()</script>

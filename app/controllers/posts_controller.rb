@@ -32,7 +32,7 @@ class PostsController < ApplicationController
             unless Post.exists?(id: params[:postid])
                 redirect_to error_path, notice: "Mynd með id:#{params[:postid]} fannst ekki"
             else
-                unless params[:rating] <= 10 && params[:rating] >= 1
+                unless params[:rating].to_i <= 10 && params[:rating].to_i >= 1
                     redirect_to error_path, notice: "Einkunnargjöf á að vera á bilinu 1-10"
                 else
                     if Rating.exists?(user_id: current_user.id, post_id: params[:postid])
@@ -73,6 +73,13 @@ class PostsController < ApplicationController
                 @post_vote_count = Hash.new{0}
                 @post_weighted_ratings = Hash.new{0}
 
+		@posts.each do |post|
+		    @post_ratings[post.id] = 0
+                    @post_weighted_ratings[post.id] = 0
+                    @post_vote_count[post.id] = 0
+ 
+		end
+
                 @ratings.each do |rating|
                     @post_ratings[rating.post_id] += rating.value
                     @post_weighted_ratings[rating.post_id] += rating.value
@@ -97,7 +104,8 @@ class PostsController < ApplicationController
                 render :judge_page
             end
         else
-            redirect_to "/posts/new"
+	    @post = Post.new
+            render :new
         end
     end
 
