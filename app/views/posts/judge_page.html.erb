@@ -19,13 +19,11 @@
 <% @rated_posts   = @posts.select { |post| @rated_posts_ids.include?(post.id) }%>
 <% @unrated_posts = @posts.select { |post| !@rated_posts_ids.include?(post.id) }%>
 
-
-
 <table>
   <thead>
     <tr>
       <th>Myndir sem þú átt eftir að gefa einkunn</th>
-      <th colspan="1"></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
@@ -40,17 +38,20 @@
       <tr>
         <td><%= post.title %></td>
         <td><%= link_to "Skoða", post_path(post.id) %></td>
+        <td><%= image_tag(post.thumbnail) %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<hr style="border:none; height: 40px; background-color: #000; margin-top: 30px; margin-bottom: 30px" />
 
 <% if @rated_posts.count > 0 %>
   <table>
     <thead>
       <tr>
         <th>Myndir sem þú hefur gefið einkunn</th>
-        <th colspan="1"></th>
+        <th colspan="2"></th>
       </tr>
     </thead>
 
@@ -59,6 +60,7 @@
         <tr>
           <td><%= post.title %></td>
           <td><%= link_to "Skoða", post_path(post.id) %></td>
+          <td><%= image_tag(post.thumbnail) %></td>
         </tr>
       <% end %>
     </tbody>

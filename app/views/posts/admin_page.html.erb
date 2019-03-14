@@ -1,4 +1,35 @@
 <h1>Sæll ofurstjórnandi</h1>
-
 <%= render 'footer' %>
+
+<p>Það eru <%= @judge_count %> dómarar skráðir inni í kerfið </p>
+<p>Vegin einkunn er heildareinkunn deilt með fjölda dómara</p>
+<p>Kemur í veg fyrir að ef einn dómari gefur full stig en enginn annar kýs þá fer hún ekki sjálfkrafa á toppinn</p>
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th>Myndatitill</th>
+      <th>Vegin einkunn</th>
+      <th>Heildareinkunn</th>
+      <th>Fjöldi atkvæða</th>
+      <th colspan=2></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @posts_sorted_by_weighted_value.each do |post| %>
+      <tr>
+        <% post = @posts.find(post[0]) %>
+        <td><%= post.title %></td>
+        <td><%= @post_weighted_ratings[post.id] %></td>
+        <td><%= @post_ratings[post.id] %></td>
+        <td><%= @post_vote_count[post.id] %></td>
+        <td><%= link_to "Skoða", post_path(post.id) %></td>
+        <td><%= image_tag(post.thumbnail) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 

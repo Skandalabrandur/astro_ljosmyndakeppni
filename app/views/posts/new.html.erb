@@ -1,4 +1,12 @@
-<h1>Ný mynd</h1>
-
-<%= render 'form', post: @post %>
-<img id="prev-img" src="#" alt="" />
+<div class="new-parent">
+    <div class="parent-inner">
+        <div class="myndform">
+        <h1>Senda inn mynd</h1>
+        <p>Sýnishorn mun birtast af myndinni þinni fyrir neðan EKKI í fullri stærð</p>
+        <p>Þegar myndin hefur verið hlaðin upp verður þér beint á síðu sem sýnir þér myndina þína</p>
+        <p>Ef þú vilt geta skoðað innlegg þitt aftur skaltu afrita slóðann þinn úr vafranum en hann verður á forminu http://astrokeppni.com/image/1234/þitt@email.is</p>
+        <%= render 'form', post: @post %>
+        <img id="prev-img" src="#" alt="" />
+        </div>
+    </div>
+</div>

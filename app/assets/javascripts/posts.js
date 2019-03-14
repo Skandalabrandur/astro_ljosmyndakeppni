@@ -5,7 +5,7 @@ function previewImage(input) {
     reader.onload = function (e) { 
       $('#prev-img') 
         .attr('src', e.target.result) 
-        .width(150) 
+        //.width(150) 
         .height(200); 
     }; 
  

@@ -1,0 +1,18 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.new-parent  {
+    display: flex;
+    height: 80%;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.parent-inner {
+    max-width: 50%;
+    flex: none;
+}
+

@@ -32,20 +32,24 @@ class PostsController < ApplicationController
             unless Post.exists?(id: params[:postid])
                 redirect_to error_path, notice: "Mynd með id:#{params[:postid]} fannst ekki"
             else
-                if Rating.exists?(user_id: current_user.id, post_id: params[:postid])
-                    rating = Rating.find_by(user_id: current_user.id, post_id: params[:postid])
-                    rating.value = params[:rating]
-                    if rating.save
-                        redirect_to "/posts/#{params[:postid]}", notice: "Uppfærlsa á einkunnargjöf tókst"
-                    else
-                        redirect_to error_path, notice: "Einkunnargjöf mistókst. Ertu að gefa slóða handvirkt?"
-                    end
+                unless params[:rating] <= 10 && params[:rating] >= 1
+                    redirect_to error_path, notice: "Einkunnargjöf á að vera á bilinu 1-10"
                 else
-                    rating = Rating.new(user_id: current_user.id, post_id: params[:postid], value: params[:rating])
-                    if rating.save
-                        redirect_to "/posts/#{params[:postid]}", notice: "Einkunnargjöf móttekin"
+                    if Rating.exists?(user_id: current_user.id, post_id: params[:postid])
+                        rating = Rating.find_by(user_id: current_user.id, post_id: params[:postid])
+                        rating.value = params[:rating]
+                        if rating.save
+                            redirect_to root_path, notice: "Uppfærsla á einkunnargjöf tókst"
+                        else
+                            redirect_to error_path, notice: "Einkunnargjöf mistókst. Ertu að gefa slóða handvirkt?"
+                        end
                     else
-                        redirect_to error_path, notice: "Einkunnargjöf mistókst. Ertu að gefa slóða handvirkt?"
+                        rating = Rating.new(user_id: current_user.id, post_id: params[:postid], value: params[:rating])
+                        if rating.save
+                            redirect_to root_path, notice: "Einkunnargjöf tókst"
+                        else
+                            redirect_to error_path, notice: "Einkunnargjöf mistókst. Ertu að gefa slóða handvirkt?"
+                        end
                     end
                 end
             end
@@ -55,7 +59,6 @@ class PostsController < ApplicationController
     # GET /posts/new
     def new
         @post = Post.new
-
     end
 
     def user_start_page
@@ -63,6 +66,32 @@ class PostsController < ApplicationController
             @user = current_user
 
             if current_user.admin
+                @ratings = Rating.all
+                @posts = Post.all
+
+                @post_ratings = Hash.new{0}
+                @post_vote_count = Hash.new{0}
+                @post_weighted_ratings = Hash.new{0}
+
+                @ratings.each do |rating|
+                    @post_ratings[rating.post_id] += rating.value
+                    @post_weighted_ratings[rating.post_id] += rating.value
+                    @post_vote_count[rating.post_id] += 1
+                end
+
+                @judge_count = 0
+
+                User.all.each do |user|
+                    if user.judge
+                        @judge_count += 1
+                    end
+                end
+
+                @post_weighted_ratings.each do |k, v|
+                    @post_weighted_ratings[k] = v.to_f / @judge_count
+                end
+
+                @posts_sorted_by_weighted_value = @post_weighted_ratings.sort_by { |k, v| v}.reverse
                 render :admin_page
             else
                 render :judge_page
