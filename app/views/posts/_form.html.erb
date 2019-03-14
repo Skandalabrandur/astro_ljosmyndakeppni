@@ -14,25 +14,32 @@
 
   <div class="field form-group">
     <%= form.label "Tölvupóstur" %>
-    <%= form.text_field :email, class: "form-control"%>
+    <%= form.text_field :email, class: "form-control", maxlength: "255", 
+      required: "required",
+      oninvalid: 'setCustomValidity("Þurfum tölvupóst, max 255 stafir")',
+      oninput: 'setCustomValidity("")'
+    %>
   </div>
 
   <div class="field form-group">
     <%= form.label "Titill" %>
-    <%= form.text_field :title, class: "form-control" %>
+    <%= form.text_field :title, class: "form-control", maxlength: "20", required: "required",
+      oninvalid: 'setCustomValidity("Mynd þarf titil, mest 20 stafir")',
+      oninput: 'setCustomValidity("")'
+    %>
   </div>
 
   <div class="field form-group">
     <%= form.label "Texti við mynd" %>
-    <%= form.text_area :content, class: "form-control" %>
+    <%= form.text_area :content, class: "form-control", maxlength: "240" %>
   </div>
 
   <div class="field form-group">
     <%= form.label "Hlaða upp mynd" %>
-    <%= form.file_field :image, :onchange => 'previewImage(this)', direct_upload: true, :class => "form-control-file" %>
+    <%= form.file_field :image, :onchange => 'previewImage(this)', direct_upload: true, :class => "form-control-file", accept: "images/*" %>
   </div>
 
   <div class="actions">
-    <%= form.submit "Senda inn mynd", class: "btn btn-primary" %>
+    <%= form.submit "Senda inn mynd", class: "btn btn-primary", id: "submitter" %>
   </div>
 <% end %>
