@@ -58,7 +58,7 @@
     <tbody>
       <% @rated_posts.each do |post| %>
         <tr>
-          <td><%= post.title %></td>
+          <td><%= post.title %> <br><br><i>Þín einkunn: <%= Rating.find_by(user_id: @user.id, post_id: post.id).value %></i></td>
           <td><%= link_to "Skoða", post_path(post.id) %></td>
           <td><%= image_tag(post.thumbnail) %></td>
         </tr>

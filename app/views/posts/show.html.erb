@@ -58,7 +58,8 @@
 
 <% end %>
 
-<% unless @picture_owner.nil? %>
+<% #delete true to re-enable innsendandi %>
+<% unless @picture_owner.nil? || true %>
     <p>
     <strong>Innsendandi:</strong>
     <%= @picture_owner %>
