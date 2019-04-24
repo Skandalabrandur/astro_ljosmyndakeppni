@@ -12,35 +12,61 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
+      redirect_to error_path, notice: 'Ólöglegt.'
   end
+
+  def change_password
+	if current_user
+		render :new_password
+	else
+		redirect_to error_path, notice: 'Ólöglegt!'
+	end
+  end
+
+  def change_password_post
+	if params[:password]
+		x = User.find(current_user.id)
+		x.password_digest = BCrypt::Password.create(params[:password])
+		if x.save
+			redirect_to error_path, notice: "Lykilorði breytt"
+		else
+			redirect_to error_path, notice: "Eitthvað fór úrskeiðis. Hafðu samband við vefstjóra"
+		end
+	else
+		redirect_to error_path, notice: "Lykilorð má ekki vera tómt"
+	end
+  end
+		
 
   # GET /users/new
   def new
-    @user = User.new
+      redirect_to error_path, notice: 'Ólöglegt.'
   end
 
   # GET /users/1/edit
   def edit
+      redirect_to error_path, notice: 'Ólöglegt.'
   end
 
   # POST /users
   def create
-    @user = User.new(user_params)
+    redirect_to error_path, notice: 'Ólöglegt.'
+    #@user = User.new(user_params)
 
-    @user.judge = false
-    @user.admin = false
+    #@user.judge = false
+    #@user.admin = false
 
-    if @user.save
-      redirect_to root_path, notice: 'User was successfully created.'
-    else
-      render :new
-    end
+    #if @user.save
+    #  redirect_to root_path, notice: 'User was successfully created.'
+    #else
+    #  render :new
+    #end
   end
 
   # PATCH/PUT /users/1
   def update
-    if @user.update(user_params)
-      redirect_to @user, notice: 'User was successfully updated.'
+    if true
+      redirect_to error_path, notice: 'Ólöglegt.'
     else
       render :edit
     end
@@ -48,8 +74,8 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def destroy
-    @user.destroy
-    redirect_to users_url, notice: 'User was successfully destroyed.'
+    #@user.destroy
+    redirect_to error_path, notice: 'Ólöglegt.'
   end
 
   private

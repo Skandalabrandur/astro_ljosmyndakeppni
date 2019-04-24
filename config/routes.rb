@@ -16,6 +16,9 @@ Rails.application.routes.draw do
 		get '/error', to: 'users#error', as: 'error'
 		get '/rate/:postid/:rating', to: 'posts#rate', as: 'rating'
 		get '/image/:id/:email/', constraints: { email: /[^\/]+/}, to: 'posts#user_show'
+		get '/passwordchange/', to: 'users#change_password'
+	        get '/passwordchagne/', to: 'users#change_password'
+		post '/passwordchanging/', to: 'users#change_password_post'
 		
 		root 'posts#user_start_page'
 

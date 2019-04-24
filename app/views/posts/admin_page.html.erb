@@ -19,6 +19,8 @@
 
   <tbody>
     <% @posts_sorted_by_weighted_value.each do |post| %>
+	<% puts "sorted #{@posts_sorted_by_weighted_value.count}" %>
+	<% puts "SHOULD NOT BE HERE" %>
       <tr>
         <% post = @posts.find(post[0]) %>
         <td><%= post.title %></td>

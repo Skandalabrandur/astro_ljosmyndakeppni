@@ -67,7 +67,11 @@ class PostsController < ApplicationController
 
             if current_user.admin
                 @ratings = Rating.all
-                @posts = Post.all
+                @posts = Post.where(deleted: false)
+		if @posts.count == 0
+			@posts = []
+			@ratings = []
+		end
 
                 @post_ratings = Hash.new{0}
                 @post_vote_count = Hash.new{0}
@@ -81,9 +85,11 @@ class PostsController < ApplicationController
 		end
 
                 @ratings.each do |rating|
-                    @post_ratings[rating.post_id] += rating.value
-                    @post_weighted_ratings[rating.post_id] += rating.value
-                    @post_vote_count[rating.post_id] += 1
+		    unless Post.find(rating.post_id).deleted
+                    	@post_ratings[rating.post_id] += rating.value 
+                    	@post_weighted_ratings[rating.post_id] += rating.value
+                    	@post_vote_count[rating.post_id] += 1
+		    end
                 end
 
                 @judge_count = 0
@@ -126,6 +132,7 @@ class PostsController < ApplicationController
 
 
         @post = Post.new(post_params)
+	@post.deleted = false
 
         if @post.save
             redirect_to "/image/#{@post.id}/#{@post.email}", notice: 'Mynd móttekin.'
@@ -146,12 +153,18 @@ class PostsController < ApplicationController
 
     # DELETE /posts/1
     def destroy
-        unless current_user && current_user.judge
+        unless current_user && (current_user.judge || current_user.admin)
             redirect_to error_path, notice: "Ólögleg aðgerð. Þarft að vera stjórnandi eða eigandi myndar til að eyða henni"
+	else
+	        #@post.destroy
+		@post.deleted = true
+		if @post.save then
+	       		redirect_to root_path, notice: 'Mynd var eytt'
+		else
+			redirect_to error_path, notice: 'Ekki tókst að eyða mynd, vinsamlegast hafðu samband við vefstjórnanda'
+		end
         end
-        @post.destroy
-        redirect_to root_path, notice: 'Mynd var eytt'
-    end
+   end
 
     private
     # Use callbacks to share common setup or constraints between actions.

@@ -11,9 +11,10 @@
   <% @rated_posts_ids.push(rating.post_id) %>
 <% end %>
 
-<% @posts = Post.all %>
+<% @posts = Post.where(deleted: false) %>
 <% if @posts.nil? || @posts.count == 0 %>
   <% @posts = [] %>
+  <% @ratings = [] %>
 <% end %>
 
 <% @rated_posts   = @posts.select { |post| @rated_posts_ids.include?(post.id) }%>

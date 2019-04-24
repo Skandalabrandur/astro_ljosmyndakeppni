@@ -1,8 +1,3 @@
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
 .new-parent  {
     display: flex;
     height: 80%;
@@ -14,5 +9,19 @@ html, body {
 .parent-inner {
     max-width: 50%;
     flex: none;
+}
+
+.fullstort {
+    max-width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+	.parent-inner {
+		max-width: 100%;
+	}
+
+	.new-parent {
+		height: auto;
+	}
 }
 
