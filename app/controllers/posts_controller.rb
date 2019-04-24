@@ -132,10 +132,17 @@ class PostsController < ApplicationController
 
 
         @post = Post.new(post_params)
-	@post.deleted = false
+        @post.deleted = false
 
         if @post.save
-            redirect_to "/image/#{@post.id}/#{@post.email}", notice: 'Mynd móttekin.'
+            if Post.where(email: @post.email, deleted: false).count > 3
+              y = Post.where(email: @post.email, deleted: false).order(created_at: :asc)[0]
+              y.deleted = true
+              y.save
+              redirect_to "/image/#{@post.id}/#{@post.email}", notice: "VINSAMLEGAST ATHUGIÐ. Þrjár myndir frá þér voru þegar í kerfinu. Elstu myndinni þinni með titilinn '#{y.title}' var eytt úr kerfinu."
+            else
+              redirect_to "/image/#{@post.id}/#{@post.email}", notice: 'Mynd móttekin.'
+            end
         else
             render :new
         end
