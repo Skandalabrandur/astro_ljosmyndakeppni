@@ -24,7 +24,7 @@
       <tr>
         <% post = @posts.find(post[0]) %>
         <td><%= post.title %></td>
-        <td><%= @post_weighted_ratings[post.id] %></td>
+        <td><%= @post_weighted_ratings[post.id].round(2) %></td>
         <td><%= @post_ratings[post.id] %></td>
         <td><%= @post_vote_count[post.id] %></td>
         <td><%= link_to "Skoða", post_path(post.id) %></td>

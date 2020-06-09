@@ -1,0 +1,45 @@
+<%= form_with(model: post, local: true) do |form| %>
+  <% if post.errors.any? %>
+    <div id="error_explanation">
+      <!--<h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>-->
+      <h2>Something prevented your photo from being saved</h2>
+
+      <ul>
+      <% post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group">
+    <%= form.label "Email" %>
+    <%= form.text_field :email, class: "form-control", maxlength: "255", 
+      required: "required",
+      oninvalid: 'setCustomValidity("Email is required, at most 255 characters of length")',
+      oninput: 'setCustomValidity("")'
+    %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label "Title" %>
+    <%= form.text_field :title, class: "form-control", maxlength: "20", required: "required",
+      oninvalid: 'setCustomValidity("Title cannot be longer than 20 characters")',
+      oninput: 'setCustomValidity("")'
+    %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label "Photo description" %>
+    <%= form.text_area :content, class: "form-control", maxlength: "240" %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label "Upload picture" %>
+    <%= form.file_field :image, :onchange => 'previewImage(this)', direct_upload: true, :class => "form-control-file", accept: "images/*" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Submit picture", class: "btn btn-primary", id: "submitter" %>
+  </div>
+<% end %>

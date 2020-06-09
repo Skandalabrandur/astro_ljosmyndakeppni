@@ -58,7 +58,11 @@ class PostsController < ApplicationController
 
     # GET /posts/new
     def new
-        @post = Post.new
+	unless Date.today >= Date.new(2019, 5, 21)
+	        @post = Post.new
+	else
+		render :done
+	end
     end
 
     def user_start_page
@@ -110,10 +114,74 @@ class PostsController < ApplicationController
                 render :judge_page
             end
         else
-	    @post = Post.new
-            render :new
+		unless Date.today >= Date.new(2019, 5, 21)
+		    @post = Post.new
+       		    render :new
+		else
+		    render :done
+		end
+		
         end
     end
+
+    def user_start_page_en
+        unless current_user.nil?
+            @user = current_user
+
+            if current_user.admin
+                @ratings = Rating.all
+                @posts = Post.where(deleted: false)
+		if @posts.count == 0
+			@posts = []
+			@ratings = []
+		end
+
+                @post_ratings = Hash.new{0}
+                @post_vote_count = Hash.new{0}
+                @post_weighted_ratings = Hash.new{0}
+
+		@posts.each do |post|
+		    @post_ratings[post.id] = 0
+                    @post_weighted_ratings[post.id] = 0
+                    @post_vote_count[post.id] = 0
+ 
+		end
+
+                @ratings.each do |rating|
+		    unless Post.find(rating.post_id).deleted
+                    	@post_ratings[rating.post_id] += rating.value 
+                    	@post_weighted_ratings[rating.post_id] += rating.value
+                    	@post_vote_count[rating.post_id] += 1
+		    end
+                end
+
+                @judge_count = 0
+
+                User.all.each do |user|
+                    if user.judge
+                        @judge_count += 1
+                    end
+                end
+
+                @post_weighted_ratings.each do |k, v|
+                    @post_weighted_ratings[k] = v.to_f / @judge_count
+                end
+
+                @posts_sorted_by_weighted_value = @post_weighted_ratings.sort_by { |k, v| v}.reverse
+                render :admin_page
+            else
+                render :judge_page
+            end
+        else
+	    unless Date.today >= Date.new(2019, 5, 21)
+		    @post = Post.new
+	            render :new_en
+	    else
+		render :done
+	    end
+        end
+    end
+
 
     # GET /posts/1/edit
     def edit

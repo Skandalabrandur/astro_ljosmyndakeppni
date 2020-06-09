@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 		get '/image/:id/:email/', constraints: { email: /[^\/]+/}, to: 'posts#user_show'
 		get '/passwordchange/', to: 'users#change_password'
 	        get '/passwordchagne/', to: 'users#change_password'
+		get '/en/', to: 'posts#user_start_page_en'
 		post '/passwordchanging/', to: 'users#change_password_post'
 		
 		root 'posts#user_start_page'
